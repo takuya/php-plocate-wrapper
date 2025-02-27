@@ -2,6 +2,7 @@
   "name": "takuya/php-plocate-wrapper",
   "description": "plocate search wrapper",
   "type": "library",
+  "license": "GPL-3.0-or-later",
   "version": "0.1",
   "autoload": {
     "psr-4": {
