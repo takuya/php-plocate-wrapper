@@ -12,7 +12,7 @@ class LocateDbBuilder {
     file_exists($this->tmpname) && unlink($this->tmpname);
   }
   
-  public function __construct( protected $db_file, protected $base_path,protected int $block_size=128) {
+  public function __construct( protected $db_file, protected $base_path, protected int $block_size = 128 ) {
     ! is_writable(dirname($this->db_file)) && throw new \RuntimeException('not writable');
     ! is_dir($this->base_path) && throw  new \RuntimeException($this->base_path.' does not exists');
     ! cmd_exists('find') && throw new \RuntimeException('findutils not found');
@@ -31,7 +31,7 @@ class LocateDbBuilder {
   
   protected function find_files( string $output_path ):bool {
     $wd = $this->base_path;
-    $proc = new ProcOpen(['find', $this->base_path, '-type', 'f','-printf',"%P\n"], $wd);
+    $proc = new ProcOpen(['find', $this->base_path, '-type', 'f', '-printf', "%P\n"], $wd);
     $proc->setStdout(fopen($output_path, 'w'));
     $proc->run();
     $proc->wait();
