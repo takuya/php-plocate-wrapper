@@ -1,0 +1,33 @@
+{
+  "name": "takuya/php-plocate-wrapper",
+  "description": "plocate search wrapper",
+  "type": "library",
+  "version": "0.1",
+  "autoload": {
+    "psr-4": {
+      "Takuya\\PhpPlocateWrapper\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\PhpPlocateWrapper\\": "tests/"
+    },
+    "files": [
+      "tests/helpers/str_rand.php"
+    ]
+  },
+  "authors": [
+    {
+      "name": "takuya",
+      "email": "55338+takuya@users.noreply.github.com"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^9.6",
+    "larapack/dd": "^1.1"
+  },
+  "require": {
+    "takuya/php-proc_open-wrapper": "^0.4.0",
+    "takuya/php-stringio": "^0.1.0"
+  }
+}
