@@ -43,21 +43,27 @@ jobs:
   run-composer-install:
     runs-on: ubuntu-latest
     steps:
+      - name: apt install
+        shell: bash
+        run : |
+          sudo apt update 
+          sudo apt install plocate
       - name:  installation
         shell: bash
         run: |
           php -v
-          composer require takuya/php-proc_open-wrapper
+          composer require takuya/php-plocate-wrapper
           cat <<'EOS' > sample.php
           <?php
           require_once 'vendor/autoload.php';
-          use Takuya\ProcOpen\ProcOpen;
-          
-          $p = new ProcOpen( ['php','-v'] );
-          $p->start();
-          $p->wait();
-          
-          echo $output = stream_get_contents($p->getFd(1));
+          use Takuya\PhpPlocateWrapper\LocateWrap;
+          use Takuya\PhpPlocateWrapper\LocateDbBuilder;
+          $path = realpath(__DIR__);
+          $db = sys_get_temp_dir().'/sample.db';
+          $builder = new LocateDbBuilder($db, $path,32);
+          $locate = new LocateWrap($db);
+          $ret = $locate->search('sample');
+          var_dump($ret = iterator_to_array($ret));
           EOS
           cat sample.php
           php sample.php

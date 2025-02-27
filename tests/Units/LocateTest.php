@@ -24,7 +24,7 @@ class LocateTest extends TestCase {
   
   public function test_plocate_search() {
     $locate = new LocateWrap($this->db);
-    $ret = $locate->search('composer');
+    $ret = $locate->search('composer.json');
     $ret = iterator_to_array($ret);
     $this->assertEquals('composer.json',$ret[0]);
   }

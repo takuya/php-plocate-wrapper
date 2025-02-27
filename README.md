@@ -47,3 +47,7 @@ composer require takuya/$name:master
 composer install
 ```
 
+from packagist
+```shell
+composer require takuya/php-plocate-wrapper
+```
