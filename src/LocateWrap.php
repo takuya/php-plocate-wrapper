@@ -11,7 +11,7 @@ class LocateWrap {
     cmd_exists('plocate') === false && throw new \RuntimeException('plocate not found.');
   }
   
-  public function search( $keyword, $regexp = false ):\Generator {
+  public function search( $keyword="''", $regexp = false ):\Generator {
     $cmd = array_filter([
                           'plocate',
                           $this->locatedb ? "-d" : '',

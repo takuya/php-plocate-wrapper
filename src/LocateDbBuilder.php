@@ -12,7 +12,16 @@ class LocateDbBuilder {
     file_exists($this->tmpname) && unlink($this->tmpname);
   }
   
-  public function __construct( protected $db_file, protected $base_path, protected int $block_size = 128 ) {
+  /**
+   * @param string $db_file
+   * @param string $base_path
+   * @param int    $block_size
+   * @param string $require_visibility 'yes' or 'no',Default '' that means plocate-build default ( currently 'yes' )
+   */
+  public function __construct( protected string $db_file,
+                               protected string $base_path,
+                               protected int    $block_size = 128,
+                               protected string $require_visibility = '' ) {
     ! is_writable(dirname($this->db_file)) && throw new \RuntimeException('not writable');
     ! is_dir($this->base_path) && throw  new \RuntimeException($this->base_path.' does not exists');
     ! cmd_exists('find') && throw new \RuntimeException('findutils not found');
@@ -21,7 +30,10 @@ class LocateDbBuilder {
   }
   
   protected function plocate_build( string $find_result_path, string $db_fpath, string $wd ):bool {
-    $cmd = explode(' ', "plocate-build -b {$this->block_size} -p") + ['a1' => $find_result_path, 'a2' => $db_fpath];
+    $flag = ! empty($this->require_visibility) ? "-l {$this->require_visibility}" : '';
+    $block = $this->block_size;
+    $cmd = explode(' ', "plocate-build {$flag} -b {$block} -p") + ['a1' => $find_result_path, 'a2' => $db_fpath];
+    $cmd = array_filter($cmd);
     $proc = new ProcOpen($cmd, $wd);
     $proc->run();
     $proc->wait();

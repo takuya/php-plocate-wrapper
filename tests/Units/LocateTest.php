@@ -21,7 +21,6 @@ class LocateTest extends TestCase {
     parent::tearDown();
     file_exists($this->db) && unlink($this->db);
   }
-  
   public function test_plocate_search() {
     $locate = new LocateWrap($this->db);
     $ret = $locate->search('composer.json');
