@@ -3,6 +3,7 @@
 namespace Takuya\PhpPlocateWrapper;
 
 use Takuya\ProcOpen\ProcOpen;
+use function Takuya\ProcOpen\cmd_exists;
 
 class LocateDbBuilder {
   

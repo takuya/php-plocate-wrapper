@@ -4,6 +4,7 @@ namespace Takuya\PhpPlocateWrapper;
 
 use Takuya\ProcOpen\ProcOpen;
 use Takuya\SystemUtil\Stream\StringIO\StringIO;
+use function Takuya\ProcOpen\cmd_exists;
 
 class LocateWrap {
   
