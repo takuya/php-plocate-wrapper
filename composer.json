@@ -3,7 +3,7 @@
   "description": "plocate search wrapper",
   "type": "library",
   "license": "GPL-3.0-or-later",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "autoload": {
     "psr-4": {
       "Takuya\\PhpPlocateWrapper\\": "src/"
@@ -14,7 +14,8 @@
       "Tests\\PhpPlocateWrapper\\": "tests/"
     },
     "files": [
-      "tests/helpers/str_rand.php"
+      "tests/helpers/str_rand.php",
+      "tests/helpers/temp_dir.php"
     ]
   },
   "authors": [
