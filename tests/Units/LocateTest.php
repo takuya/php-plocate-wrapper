@@ -29,10 +29,16 @@ class LocateTest extends TestCase {
   }
   public function test_plocate_regex_search() {
     $locate = new LocateWrap($this->db);
-    $ret = $locate->search('^src',true);
+    $ret = $locate->search('^src',false,true);
     foreach ($ret as $item) {
       $this->assertMatchesRegularExpression('/^src/',$item);
     }
+  }
+  public function test_plocate_ignorecase_search() {
+    $locate = new LocateWrap($this->db);
+    $ret = $locate->search('ComposER',true);
+    $ret = iterator_to_array($ret);
+    $this->assertEquals('composer.json',$ret[0]);
   }
 }
 
