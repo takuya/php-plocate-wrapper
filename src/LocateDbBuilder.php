@@ -3,11 +3,13 @@
 namespace Takuya\PhpPlocateWrapper;
 
 use Takuya\ProcOpen\ProcOpen;
+use Takuya\SystemUtil\Stream\StringIO\StringIO;
 use function Takuya\ProcOpen\cmd_exists;
 
 class LocateDbBuilder {
   
   private string $tmpname;
+  private array $ignore_pattern;
   
   public function __destruct() {
     file_exists($this->tmpname) && unlink($this->tmpname);
@@ -42,6 +44,34 @@ class LocateDbBuilder {
     return $proc->info->exitcode === 0;
   }
   
+  /**
+   * @param string $pattern regular expression without delim.( ex '^composer.+$' , not '/^composer.+/ )
+   * @return void
+   */
+  public function addIgnore(string $pattern):void {
+    $easy_delim_check = fn ($pattern) => preg_match('/^([\|\/#~])([^\/#~]*)\1([a-zA-Z]*)$/', $pattern);
+    if($easy_delim_check($pattern)){
+      throw new \InvalidArgumentException('regex with delim. remove delim.');
+    }
+    $this->ignore_pattern ??=[];
+    $this->ignore_pattern[] = $pattern;
+  }
+  protected function remove_ignore_names(string $input_path):false|int {
+    if (empty($this->ignore_pattern)){
+      return true;
+    }
+    $fstype = 'temp/maxmemory:'.(1024*1024*10);
+    $out = new StringIO('',$fstype);
+    $in = new StringIO(file_get_contents($input_path),$fstype);
+    $regex = implode('|',$this->ignore_pattern);
+    foreach($in as $line){
+      if( preg_match("/{$regex}/",$line)) continue;
+      $out->write($line."\n");
+    }
+    $str = $out->get_contents();
+    return file_put_contents($input_path,$str);
+  }
+  
   protected function find_files( string $output_path ):bool {
     $wd = $this->base_path;
     $proc = new ProcOpen(['find', $this->base_path, '-type', 'f', '-printf', "%P\n"], $wd);
@@ -66,7 +96,7 @@ class LocateDbBuilder {
   
   public function build():bool {
     
-    return $this->find_files($this->tmpname)
+    return $this->find_files($this->tmpname) && $this->remove_ignore_names($this->tmpname)
            && $this->plocate_build($this->tmpname, $this->db_file, $this->base_path);
   }
 }
